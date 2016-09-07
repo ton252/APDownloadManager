@@ -1,25 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="H7c-54-knG">
+                                <rect key="frame" x="20" y="333" width="335" height="2"/>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Download progress:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W9c-WH-dhu">
+                                <rect key="frame" x="20" y="304" width="153" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WRh-ma-LgH">
+                                <rect key="frame" x="146" y="343" width="82" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="2Hi-q9-JKl"/>
+                                    <constraint firstAttribute="width" constant="82" id="sfS-wl-dql"/>
+                                </constraints>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelDownloads:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nhT-kg-2pf"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="H7c-54-knG" secondAttribute="trailing" constant="20" id="7DY-OG-Bmd"/>
+                            <constraint firstItem="H7c-54-knG" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="8vD-aI-dpv"/>
+                            <constraint firstItem="H7c-54-knG" firstAttribute="leading" secondItem="W9c-WH-dhu" secondAttribute="trailing" constant="-153" id="Ck8-Io-uC1"/>
+                            <constraint firstItem="WRh-ma-LgH" firstAttribute="top" secondItem="H7c-54-knG" secondAttribute="bottom" constant="8" id="Ets-hh-B9C"/>
+                            <constraint firstItem="H7c-54-knG" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MFA-Ad-0xY"/>
+                            <constraint firstItem="H7c-54-knG" firstAttribute="top" secondItem="W9c-WH-dhu" secondAttribute="bottom" constant="8" id="Vmc-tT-ftJ"/>
+                            <constraint firstItem="H7c-54-knG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="fY6-us-mZz"/>
+                            <constraint firstItem="WRh-ma-LgH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mq4-v5-k3x"/>
+                        </constraints>
                     </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="downloadProgressView" destination="H7c-54-knG" id="ECE-LT-Uln"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="304.5" y="363.5"/>
         </scene>
     </scenes>
 </document>

@@ -10,6 +10,7 @@
 ///
 /// This also triggers the necessary KVO to support asynchronous operations.
 
+@property(assign, nonatomic) BOOL cancelDependentOperations;
 - (void)completeOperation;
 
 @end

@@ -23,7 +23,7 @@
     
     if (self) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        config.HTTPMaximumConnectionsPerHost = 4;
+        config.HTTPMaximumConnectionsPerHost = 2;
         
         self.sessionManager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:config];
         self.progress = [[NSProgress alloc] init];
@@ -92,6 +92,7 @@
                                              }
                                              [operation cancel];
                                          }];
+    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityHigh;
     return operation;
 }
@@ -132,6 +133,7 @@
                                              }
                                              [operation cancel];
                                          }];
+    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityNormal;
     return operation;
 }
@@ -152,7 +154,7 @@
                                                    if (receivedBytes < 0){
                                                        receivedBytes = downloadProgress.completedUnitCount;
                                                    }
-                                                   [strongSelf setProgressCompletedUnitCount:strongSelf.progress.completedUnitCount + receivedBytes];
+                                                   [strongSelf setProgressCompletedUnitCount:(strongSelf.progress.completedUnitCount + receivedBytes)];
                                                    //strongSelf.progress.completedUnitCount += receivedBytes;
                                                    previousCompletedUnitCount = downloadProgress.completedUnitCount;
                                                } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
@@ -162,13 +164,12 @@
                                                    [strongSelf createDirectory:filePath error:nil];
                                                    return filePath;
                                                } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                                                   if (!operation.isFinished){
                                                         __strong typeof(self)strongSelf = weakSelf;
                                                        [strongSelf completeLoadFile:file operation:operation prevUnionCount:previousCompletedUnitCount error:error];
                                                        [strongSelf finishLoadingFiles];
-                                                   }
                                                }];
 
+    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityLow;
     
     return operation;
@@ -183,7 +184,7 @@
     }else {
         if(!error) error = checkError;
 #warning Проблема заключается в том, что очередь отменяет завершенные успешно операции.
-        [self setProgressCompletedUnitCount:self.progress.completedUnitCount - operation.task.response.expectedContentLength];
+        [self setProgressCompletedUnitCount:(self.progress.completedUnitCount - operation.task.response.expectedContentLength)];
         [self setProgressTotalUnitCount:self.progress.totalUnitCount - previousCompletedUnitCount];
         //self.progress.completedUnitCount -= previousCompletedUnitCount;
         //self.progress.totalUnitCount -= operation.task.response.expectedContentLength;

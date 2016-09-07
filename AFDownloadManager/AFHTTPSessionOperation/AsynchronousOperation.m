@@ -26,6 +26,15 @@
 }
 
 - (void)start {
+    
+    if (self.cancelDependentOperations) {
+        for (NSOperation *operation in self.dependencies) {
+            if ([operation isCancelled]){
+                [self cancel];
+            }
+        }
+    }
+    
     if ([self isCancelled]) {
         self.finished = YES;
         return;
@@ -84,10 +93,9 @@
     }
 }
 
-//-(void)cancel {
-//     //_finished = YES;
-//    [super cancel];
-//
-//}
+-(void)cancel {
+    _finished = YES;
+    [super cancel];
+}
 
 @end

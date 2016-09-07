@@ -13,9 +13,18 @@
 		717FCB451D801377009AE7E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 717FCB431D801377009AE7E8 /* Main.storyboard */; };
 		717FCB471D801377009AE7E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 717FCB461D801377009AE7E8 /* Assets.xcassets */; };
 		717FCB4A1D801377009AE7E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 717FCB481D801377009AE7E8 /* LaunchScreen.storyboard */; };
+		717FCB5F1D8013A4009AE7E8 /* AFDownloadFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB541D8013A4009AE7E8 /* AFDownloadFile.m */; };
+		717FCB601D8013A4009AE7E8 /* AFDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB571D8013A4009AE7E8 /* AFDownloadManager.m */; };
+		717FCB611D8013A4009AE7E8 /* AFHTTPSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB5A1D8013A4009AE7E8 /* AFHTTPSessionOperation.m */; };
+		717FCB621D8013A4009AE7E8 /* AFURLSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB5C1D8013A4009AE7E8 /* AFURLSessionOperation.m */; };
+		717FCB631D8013A4009AE7E8 /* AsynchronousOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB5E1D8013A4009AE7E8 /* AsynchronousOperation.m */; };
+		717FCB6F1D8026DF009AE7E8 /* urls.plist in Resources */ = {isa = PBXBuildFile; fileRef = 717FCB6E1D8026DF009AE7E8 /* urls.plist */; };
+		77EEC3E2DCD2B51004F1B96F /* libPods-ExempleProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BF173B50A6C172E93E73C96 /* libPods-ExempleProject.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12190F4D6C5E35653F195358 /* Pods-ExempleProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExempleProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ExempleProject/Pods-ExempleProject.debug.xcconfig"; sourceTree = "<group>"; };
+		5BF173B50A6C172E93E73C96 /* libPods-ExempleProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExempleProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		717FCB371D801377009AE7E8 /* ExempleProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExempleProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		717FCB3B1D801377009AE7E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		717FCB3D1D801377009AE7E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -26,6 +35,18 @@
 		717FCB461D801377009AE7E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		717FCB491D801377009AE7E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		717FCB4B1D801377009AE7E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		717FCB531D8013A4009AE7E8 /* AFDownloadFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadFile.h; sourceTree = "<group>"; };
+		717FCB541D8013A4009AE7E8 /* AFDownloadFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadFile.m; sourceTree = "<group>"; };
+		717FCB561D8013A4009AE7E8 /* AFDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadManager.h; sourceTree = "<group>"; };
+		717FCB571D8013A4009AE7E8 /* AFDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadManager.m; sourceTree = "<group>"; };
+		717FCB591D8013A4009AE7E8 /* AFHTTPSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionOperation.h; sourceTree = "<group>"; };
+		717FCB5A1D8013A4009AE7E8 /* AFHTTPSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionOperation.m; sourceTree = "<group>"; };
+		717FCB5B1D8013A4009AE7E8 /* AFURLSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionOperation.h; sourceTree = "<group>"; };
+		717FCB5C1D8013A4009AE7E8 /* AFURLSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionOperation.m; sourceTree = "<group>"; };
+		717FCB5D1D8013A4009AE7E8 /* AsynchronousOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsynchronousOperation.h; sourceTree = "<group>"; };
+		717FCB5E1D8013A4009AE7E8 /* AsynchronousOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsynchronousOperation.m; sourceTree = "<group>"; };
+		717FCB6E1D8026DF009AE7E8 /* urls.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = urls.plist; sourceTree = "<group>"; };
+		91FF90527F81B10008C9E57F /* Pods-ExempleProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExempleProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExempleProject/Pods-ExempleProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77EEC3E2DCD2B51004F1B96F /* libPods-ExempleProject.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,8 +64,11 @@
 		717FCB2E1D801377009AE7E8 = {
 			isa = PBXGroup;
 			children = (
+				717FCB511D8013A4009AE7E8 /* AFDownloadManager */,
 				717FCB391D801377009AE7E8 /* ExempleProject */,
 				717FCB381D801377009AE7E8 /* Products */,
+				953DDA6CD044C6AFE7DAB0D6 /* Pods */,
+				9DA60C30CE10921C5406E97C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,9 +99,61 @@
 		717FCB3A1D801377009AE7E8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				717FCB6E1D8026DF009AE7E8 /* urls.plist */,
 				717FCB3B1D801377009AE7E8 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		717FCB511D8013A4009AE7E8 /* AFDownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				717FCB521D8013A4009AE7E8 /* AFDownloadFile */,
+				717FCB561D8013A4009AE7E8 /* AFDownloadManager.h */,
+				717FCB571D8013A4009AE7E8 /* AFDownloadManager.m */,
+				717FCB581D8013A4009AE7E8 /* AFHTTPSessionOperation */,
+			);
+			name = AFDownloadManager;
+			path = ../AFDownloadManager;
+			sourceTree = "<group>";
+		};
+		717FCB521D8013A4009AE7E8 /* AFDownloadFile */ = {
+			isa = PBXGroup;
+			children = (
+				717FCB531D8013A4009AE7E8 /* AFDownloadFile.h */,
+				717FCB541D8013A4009AE7E8 /* AFDownloadFile.m */,
+			);
+			path = AFDownloadFile;
+			sourceTree = "<group>";
+		};
+		717FCB581D8013A4009AE7E8 /* AFHTTPSessionOperation */ = {
+			isa = PBXGroup;
+			children = (
+				717FCB591D8013A4009AE7E8 /* AFHTTPSessionOperation.h */,
+				717FCB5A1D8013A4009AE7E8 /* AFHTTPSessionOperation.m */,
+				717FCB5B1D8013A4009AE7E8 /* AFURLSessionOperation.h */,
+				717FCB5C1D8013A4009AE7E8 /* AFURLSessionOperation.m */,
+				717FCB5D1D8013A4009AE7E8 /* AsynchronousOperation.h */,
+				717FCB5E1D8013A4009AE7E8 /* AsynchronousOperation.m */,
+			);
+			path = AFHTTPSessionOperation;
+			sourceTree = "<group>";
+		};
+		953DDA6CD044C6AFE7DAB0D6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				12190F4D6C5E35653F195358 /* Pods-ExempleProject.debug.xcconfig */,
+				91FF90527F81B10008C9E57F /* Pods-ExempleProject.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9DA60C30CE10921C5406E97C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5BF173B50A6C172E93E73C96 /* libPods-ExempleProject.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -86,9 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 717FCB4E1D801377009AE7E8 /* Build configuration list for PBXNativeTarget "ExempleProject" */;
 			buildPhases = (
+				267868729A9BF90CD53CF402 /* 📦 Check Pods Manifest.lock */,
 				717FCB331D801377009AE7E8 /* Sources */,
 				717FCB341D801377009AE7E8 /* Frameworks */,
 				717FCB351D801377009AE7E8 /* Resources */,
+				6EE2DD307CB74405D4321D0B /* 📦 Embed Pods Frameworks */,
+				FEC5C4BEFD61B80A60AA6834 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -138,11 +218,60 @@
 			files = (
 				717FCB4A1D801377009AE7E8 /* LaunchScreen.storyboard in Resources */,
 				717FCB471D801377009AE7E8 /* Assets.xcassets in Resources */,
+				717FCB6F1D8026DF009AE7E8 /* urls.plist in Resources */,
 				717FCB451D801377009AE7E8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		267868729A9BF90CD53CF402 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6EE2DD307CB74405D4321D0B /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ExempleProject/Pods-ExempleProject-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FEC5C4BEFD61B80A60AA6834 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ExempleProject/Pods-ExempleProject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		717FCB331D801377009AE7E8 /* Sources */ = {
@@ -150,8 +279,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				717FCB421D801377009AE7E8 /* ViewController.m in Sources */,
+				717FCB621D8013A4009AE7E8 /* AFURLSessionOperation.m in Sources */,
 				717FCB3F1D801377009AE7E8 /* AppDelegate.m in Sources */,
+				717FCB5F1D8013A4009AE7E8 /* AFDownloadFile.m in Sources */,
 				717FCB3C1D801377009AE7E8 /* main.m in Sources */,
+				717FCB601D8013A4009AE7E8 /* AFDownloadManager.m in Sources */,
+				717FCB611D8013A4009AE7E8 /* AFHTTPSessionOperation.m in Sources */,
+				717FCB631D8013A4009AE7E8 /* AsynchronousOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +395,7 @@
 		};
 		717FCB4F1D801377009AE7E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 12190F4D6C5E35653F195358 /* Pods-ExempleProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ExempleProject/Info.plist;
@@ -272,6 +407,7 @@
 		};
 		717FCB501D801377009AE7E8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 91FF90527F81B10008C9E57F /* Pods-ExempleProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ExempleProject/Info.plist;
@@ -300,6 +436,7 @@
 				717FCB501D801377009AE7E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
