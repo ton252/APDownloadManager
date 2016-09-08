@@ -15,25 +15,19 @@
 
 @synthesize finished  = _finished;
 @synthesize executing = _executing;
+@synthesize cancelled = _cancelled;
 
 - (id)init {
     self = [super init];
     if (self) {
         _finished  = NO;
         _executing = NO;
+        _cancelled = NO;
     }
     return self;
 }
 
 - (void)start {
-    
-    if (self.cancelDependentOperations) {
-        for (NSOperation *operation in self.dependencies) {
-            if ([operation isCancelled]){
-                [self cancel];
-            }
-        }
-    }
     
     if ([self isCancelled]) {
         self.finished = YES;
@@ -43,6 +37,17 @@
     self.executing = YES;
 
     [self main];
+}
+
+- (void) cancelNextOperations {
+    if (self.cancelDependentOperations) {
+        for (NSOperation *operation in self.dependencies) {
+            if ([operation isCancelled]){
+                [self cancel];
+                return;
+            }
+        }
+    }
 }
 
 - (void)main {
@@ -69,7 +74,7 @@
 
 - (BOOL)isFinished {
     @synchronized(self) {
-        return _finished;
+        return _finished && !_cancelled;
     }
 }
 
@@ -93,9 +98,11 @@
     }
 }
 
--(void)cancel {
-    _finished = YES;
+- (void)cancel {
     [super cancel];
+    [self cancelNextOperations];
+    _finished = YES;
 }
+
 
 @end

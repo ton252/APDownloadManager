@@ -23,7 +23,7 @@
     
     if (self) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        config.HTTPMaximumConnectionsPerHost = 2;
+        config.HTTPMaximumConnectionsPerHost = 4;
         
         self.sessionManager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:config];
         self.progress = [[NSProgress alloc] init];
@@ -41,6 +41,7 @@
 
 - (void) addDownloadFiles:(NSArray<AFDownloadFile*> *) files {
     @synchronized (self) {
+        [self checkFilesForDuplicateURLs:files];
         [self.filesInProgress addObjectsFromArray:files];
         NSMutableArray *operations = [[NSMutableArray alloc] init];
         for (AFDownloadFile *file in files) {
@@ -49,6 +50,31 @@
         }
         [self.operationQueue addOperations:operations waitUntilFinished:NO];
     }
+}
+
+- (BOOL) checkFilesForDuplicateURLs:(NSArray<AFDownloadFile *> *) files{
+    
+    BOOL existDuplicate = NO;
+    
+    for (int i = 0; i < files.count; i++) {
+        AFDownloadFile *file1 = files[i];
+        
+        for (int j = 0; j < files.count; j++){
+            if (i != j) {
+                AFDownloadFile *file2 = files[j];
+                if([file1.directURL isEqualToString:file2.directURL]) {
+                    NSLog(@"Warning! Duplicate direct url: %@",file1.directURL);
+                    existDuplicate = YES;
+                }
+                if([file1.inDirectURL isEqualToString:file2.inDirectURL]) {
+                    NSLog(@"Warning! Duplicate inDirect url: %@",file1.directURL);
+                    existDuplicate = YES;
+                }
+            }
+        }
+    }
+    
+    return existDuplicate;
 }
 
 - (NSArray *)operationsForFile:(AFDownloadFile *) file {
@@ -119,7 +145,6 @@
                                              }
                                              
                                              [strongSelf setProgressTotalUnitCount:strongSelf.progress.totalUnitCount + expectedContentLength];
-                                             //strongSelf.progress.totalUnitCount += expectedContentLength;
                                              file.size = expectedContentLength;
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadHeaderOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadHeaderOfFile:file operation:operation error:nil];
@@ -127,11 +152,10 @@
                                          } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                                              __strong typeof(self)strongSelf = weakSelf;
                                              [strongSelf setProgressTotalUnitCount:strongSelf.progress.totalUnitCount - expectedContentLength];
-                                             //strongSelf.progress.totalUnitCount -= expectedContentLength;
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadHeaderOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadHeaderOfFile:file operation:operation error:error];
                                              }
-                                             [operation cancel];
+                                            [operation cancel];
                                          }];
     operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityNormal;
@@ -155,7 +179,6 @@
                                                        receivedBytes = downloadProgress.completedUnitCount;
                                                    }
                                                    [strongSelf setProgressCompletedUnitCount:(strongSelf.progress.completedUnitCount + receivedBytes)];
-                                                   //strongSelf.progress.completedUnitCount += receivedBytes;
                                                    previousCompletedUnitCount = downloadProgress.completedUnitCount;
                                                } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
                                                     __strong typeof(self)strongSelf = weakSelf;
@@ -165,8 +188,9 @@
                                                    return filePath;
                                                } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
                                                         __strong typeof(self)strongSelf = weakSelf;
-                                                       [strongSelf completeLoadFile:file operation:operation prevUnionCount:previousCompletedUnitCount error:error];
-                                                       [strongSelf finishLoadingFiles];
+                                                        [strongSelf completeLoadFile:file operation:operation prevUnionCount:previousCompletedUnitCount error:error];
+                                                        [strongSelf finishLoadingFiles];
+                                                        [operation cancel];
                                                }];
 
     operation.cancelDependentOperations = YES;
@@ -183,12 +207,8 @@
        [self changeFileStatus:file success:YES];
     }else {
         if(!error) error = checkError;
-#warning Проблема заключается в том, что очередь отменяет завершенные успешно операции.
         [self setProgressCompletedUnitCount:(self.progress.completedUnitCount - operation.task.response.expectedContentLength)];
         [self setProgressTotalUnitCount:self.progress.totalUnitCount - previousCompletedUnitCount];
-        //self.progress.completedUnitCount -= previousCompletedUnitCount;
-        //self.progress.totalUnitCount -= operation.task.response.expectedContentLength;
-        [[NSFileManager defaultManager] removeItemAtPath:file.path error:nil];
         [self changeFileStatus:file success:NO];
     }
 
@@ -200,11 +220,14 @@
 - (void) finishLoadingFiles {
     if (self.filesInProgress.count == 0) {
         if ([self.delegate respondsToSelector:@selector(completeLoadFiles:failureFiles:)]){
-            NSArray *successFiles = self.filesSuccess.allObjects;
-            NSArray *failureFiles = self.filesFailure.allObjects;
+            NSArray *successFiles = [self.filesSuccess.allObjects copy];
+            NSArray *failureFiles = [self.filesFailure.allObjects copy];
             [self.delegate completeLoadFiles:successFiles failureFiles:failureFiles];
         }
+        [self.filesSuccess removeAllObjects];
+        [self.filesFailure removeAllObjects];
     }
+
 }
 
 - (NSError *)checkResponseForErrors:(NSURLResponse *) response{
@@ -221,12 +244,12 @@
 
 - (void) changeFileStatus:(AFDownloadFile *) file success:(BOOL) success {
     @synchronized (self) {
-        [self.filesInProgress removeObject:file];
         if (success){
             [self.filesSuccess addObject:file];
         } else {
             [self.filesFailure addObject:file];
         }
+        [self.filesInProgress removeObject:file];
     }
 }
 
@@ -243,45 +266,24 @@
                                                            error:error];
 }
 
-- (void) cancelDownloadFiles {
-//    for (NSOperation *operation in self.operationQueue.operations) {
-//        if (![operation isCancelled]) {
-//            [operation cancel];
-//        }
-//    }
-//    [self.operationQueue setSuspended:YES];
-//    
-//    for (NSOperation *operation in self.operationQueue.operations) {
-//        if (![operation isFinished]) {
-//            [operation cancel];
-//        }
-//    }
-//
-    [self.operationQueue cancelAllOperations];
-//    self.operationQueue = [[NSOperationQueue alloc] init];
-//    [self.filesSuccess removeAllObjects];
-//    [self.filesFailure removeAllObjects];
-//    [self.filesInProgress removeAllObjects];
-//    self.progress.totalUnitCount = 0;
-//    self.progress.completedUnitCount = 0;
-}
-
-//- (void) setProgress:(NSProgress *) progress {
-//    [self willChangeValueForKey:@"progress"];
-//    _progress = progress;
-//    [self didChangeValueForKey:@"progress"];
-//}
-
 - (void) setProgressTotalUnitCount:(int64_t) totalUnitCount {
-    [self willChangeValueForKey:@"progress"];
-    self.progress.totalUnitCount = totalUnitCount;
-    [self didChangeValueForKey:@"progress"];
+    if (self.progress.totalUnitCount != totalUnitCount){
+        [self willChangeValueForKey:@"progress"];
+        self.progress.totalUnitCount = totalUnitCount;
+        [self didChangeValueForKey:@"progress"];
+    }
 }
 
 - (void) setProgressCompletedUnitCount:(int64_t) completedUnitCount {
-    [self willChangeValueForKey:@"progress"];
-    self.progress.completedUnitCount = completedUnitCount;
-    [self didChangeValueForKey:@"progress"];
+    if (self.progress.completedUnitCount != completedUnitCount) {
+        [self willChangeValueForKey:@"progress"];
+        self.progress.completedUnitCount = completedUnitCount;
+        [self didChangeValueForKey:@"progress"];
+    }
+}
+
+- (void) cancelDownloadFiles {
+    [self.operationQueue cancelAllOperations];
 }
 
 @end

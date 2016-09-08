@@ -97,7 +97,9 @@
     
     operation.task = [manager downloadTaskWithRequest:request progress:downloadProgressBlock destination:destination completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         if (completionHandler) completionHandler(response, filePath, error);
-        [operation completeOperation];
+            if (error.code != -999){
+            [operation completeOperation];
+            }
     }];
     
     return operation;

@@ -22,6 +22,7 @@ typedef NSString* (^AFDirectLinkBlock)(NSURLSessionDataTask *, id);
 @property(nonatomic, copy) AFDirectLinkBlock directLinkHandler;
 
 + (NSArray<AFDownloadFile*> *) filesWithURLs:(NSArray<NSString*> *) URLs;
++ (AFDownloadFile *) fileWithURL:(NSString *) URL;
 
 @end
 

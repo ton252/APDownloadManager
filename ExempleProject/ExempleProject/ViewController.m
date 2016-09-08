@@ -30,37 +30,43 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *path = [mainBundle pathForResource: @"urls" ofType: @"plist"];
     NSArray *URLs = [[NSArray alloc] initWithContentsOfFile:path];
-    
-    NSArray *files = [AFDownloadFile filesWithURLs:URLs];
-    
+    NSSet *set = [NSSet setWithArray:URLs]; // if there is duplicates in URLs
+    NSArray *files = [AFDownloadFile filesWithURLs:set.allObjects];
     [self.downloadManager addDownloadFiles:files];
     
-    // Do any additional setup after loading the view, typically from a nib.
+//    AFDownloadFile *file = [[AFDownloadFile alloc] init];
+//    file.inDirectURL = @"https://player.vimeo.com/video/181757098/config";
+//    file.path = [mainPath stringByAppendingString:@"video181757098.mp4"];
+//    AFDirectLinkBlock block = ^NSString *(NSURLSessionDataTask *task, id responseObject){
+//        NSArray *progressive = [[[responseObject objectForKey:@"request"] objectForKey:@"files"] objectForKey:@"progressive"];
+//        NSString *videoURL = [[progressive firstObject] objectForKey:@"url"];
+//        return videoURL;
+//    };
+//    [file setDirectLinkHandler:block];
+//    [self.downloadManager addDownloadFiles:@[file]];
 }
 
 - (IBAction)cancelDownloads:(id)sender {
     [self.downloadManager cancelDownloadFiles];
 }
 
+#pragma mark Delegate methods
+
 - (void)completeLoadDirectLinkOfFile:(AFDownloadFile *)file operation:(AFHTTPSessionOperation*) operation error:(NSError *)error {
-    //NSLog(@"Direct_Link| name: %@  error: %zd",file.name,error.code);
+    NSLog(@"Direct_Link| name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadHeaderOfFile:(AFDownloadFile *)file operation:(AFHTTPSessionOperation*) operation error:(NSError *)error {
-    //NSLog(@"Header     | name: %@  error: %zd",file.name,error.code);
+    NSLog(@"Header     | name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadFile:(AFDownloadFile *) file operation:(AFURLSessionOperation*) operation error:(NSError *) error {
-    //NSLog(@"Downloaded | name: %@  error: %zd",file.name,error.code);
+    NSLog(@"Downloaded | name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadFiles:(NSArray<AFDownloadFile*> *)successFiles failureFiles:(NSArray<AFDownloadFile*> *)failureFiles {
     
-    for (AFDownloadFile *file in successFiles) {
-        if (![[NSFileManager defaultManager] fileExistsAtPath:file.path]){
-            NSLog(@"NO such file %@",file.path);
-        }
-    }
-    
     NSLog(@"Success:%zd Failure:%zd",successFiles.count,failureFiles.count);
 }
+
+#pragma mark Observe methods
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     
