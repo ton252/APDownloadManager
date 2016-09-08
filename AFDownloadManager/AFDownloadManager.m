@@ -117,7 +117,7 @@
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadDirectLinkOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadDirectLinkOfFile:file operation:operation error:error];
                                              }
-                                             [self changeFileStatus:false success:NO];
+                                             [self changeFileStatus:file success:NO];
                                              [strongSelf finishLoadingFiles];
                                          }];
     operation.queuePriority = NSOperationQueuePriorityHigh;
@@ -159,7 +159,7 @@
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadHeaderOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadHeaderOfFile:file operation:operation error:error];
                                              }
-                                             [self changeFileStatus:false success:NO];
+                                             [self changeFileStatus:file success:NO];
                                              [strongSelf finishLoadingFiles];
                                          }];
     operation.queuePriority = NSOperationQueuePriorityNormal;
@@ -211,8 +211,8 @@
     }else {
         if(!error) error = checkError;
 
-        int64_t completedUnitCount = MAX(self.progress.completedUnitCount - operation.task.response.expectedContentLength, 0);
-        int64_t expectedContentLength = MAX(self.progress.totalUnitCount - previousCompletedUnitCount, 0);
+        int64_t completedUnitCount = self.progress.completedUnitCount - operation.task.response.expectedContentLength;
+        int64_t expectedContentLength = self.progress.totalUnitCount - previousCompletedUnitCount;
         [self setProgressCompletedUnitCount:completedUnitCount totalUnitCount:expectedContentLength];
         
         [self changeFileStatus:file success:NO];
@@ -231,6 +231,7 @@
             [self.delegate completeLoadFiles:successFiles failureFiles:failureFiles];
         }
         self.operationQueue = [[NSOperationQueue alloc] init];
+        self.operationQueue.maxConcurrentOperationCount = 4;
         [self.filesSuccess removeAllObjects];
         [self.filesFailure removeAllObjects];
     }

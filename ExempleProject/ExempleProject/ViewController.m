@@ -62,8 +62,7 @@
     //NSLog(@"Downloaded | name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadFiles:(NSArray<AFDownloadFile*> *)successFiles failureFiles:(NSArray<AFDownloadFile*> *)failureFiles {
-
-    //NSLog(@"Success:%zd Failure:%zd",successFiles.count,failureFiles.count);
+    NSLog(@"Success:%zd Failure:%zd",successFiles.count,failureFiles.count);
 }
 
 #pragma mark Observe methods
@@ -76,7 +75,6 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.downloadProgressView.progress = downloadProgress.fractionCompleted;
-            NSLog(@"%zd %zd",downloadProgress.completedUnitCount,downloadProgress.totalUnitCount);
         });
 
     }
