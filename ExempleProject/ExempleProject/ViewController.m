@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "AFDownloadManager.h"
+#import "AFVimeoDownloadFile.h"
 
 @interface ViewController () <AFDownloadManagerDelegate>
 @property (weak, nonatomic) IBOutlet UIProgressView *downloadProgressView;
@@ -22,28 +23,25 @@
     
     self.downloadManager = [[AFDownloadManager alloc] init];
     self.downloadManager.delegate = self;
-    [self.downloadManager addObserver:self forKeyPath:@"progress" options:0 context:nil];
     
     NSString *mainPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
     NSLog(@"Cache folder: %@",mainPath);
-    
+    [self.downloadManager addObserver:self forKeyPath:@"progress" options:0 context:nil];
+}
+
+- (IBAction)loadFilesFromList:(id)sender {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *path = [mainBundle pathForResource: @"urls" ofType: @"plist"];
     NSArray *URLs = [[NSArray alloc] initWithContentsOfFile:path];
     NSSet *set = [NSSet setWithArray:URLs]; // if there is duplicates in URLs
     NSArray *files = [AFDownloadFile filesWithURLs:set.allObjects];
     [self.downloadManager addDownloadFiles:files];
-    
-//    AFDownloadFile *file = [[AFDownloadFile alloc] init];
-//    file.inDirectURL = @"https://player.vimeo.com/video/181757098/config";
-//    file.path = [mainPath stringByAppendingString:@"video181757098.mp4"];
-//    AFDirectLinkBlock block = ^NSString *(NSURLSessionDataTask *task, id responseObject){
-//        NSArray *progressive = [[[responseObject objectForKey:@"request"] objectForKey:@"files"] objectForKey:@"progressive"];
-//        NSString *videoURL = [[progressive firstObject] objectForKey:@"url"];
-//        return videoURL;
-//    };
-//    [file setDirectLinkHandler:block];
-//    [self.downloadManager addDownloadFiles:@[file]];
+}
+
+- (IBAction)loadVimeoFiles:(id)sender {
+    AFVimeoDownloadFile *file1 = [AFVimeoDownloadFile fileWithURL:@"https://vimeo.com/181560988"];
+    AFVimeoDownloadFile *file2 = [AFVimeoDownloadFile fileWithURL:@"https://vimeo.com/180979975"];
+    [self.downloadManager addDownloadFiles:@[file1,file2]];
 }
 
 - (IBAction)cancelDownloads:(id)sender {
@@ -53,17 +51,19 @@
 #pragma mark Delegate methods
 
 - (void)completeLoadDirectLinkOfFile:(AFDownloadFile *)file operation:(AFHTTPSessionOperation*) operation error:(NSError *)error {
-    NSLog(@"Direct_Link| name: %@  error: %zd",file.name,error.code);
+    //NSLog(@"Direct_Link| name: %@  error: %zd",file.name,error.code);
+    AFVimeoDownloadFile *vimeoFile = (AFVimeoDownloadFile *)file;
+    [vimeoFile setExtentionToPath];
 }
 - (void)completeLoadHeaderOfFile:(AFDownloadFile *)file operation:(AFHTTPSessionOperation*) operation error:(NSError *)error {
-    NSLog(@"Header     | name: %@  error: %zd",file.name,error.code);
+    //NSLog(@"Header     | name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadFile:(AFDownloadFile *) file operation:(AFURLSessionOperation*) operation error:(NSError *) error {
-    NSLog(@"Downloaded | name: %@  error: %zd",file.name,error.code);
+    //NSLog(@"Downloaded | name: %@  error: %zd",file.name,error.code);
 }
 - (void)completeLoadFiles:(NSArray<AFDownloadFile*> *)successFiles failureFiles:(NSArray<AFDownloadFile*> *)failureFiles {
-    
-    NSLog(@"Success:%zd Failure:%zd",successFiles.count,failureFiles.count);
+
+    //NSLog(@"Success:%zd Failure:%zd",successFiles.count,failureFiles.count);
 }
 
 #pragma mark Observe methods
@@ -73,15 +73,12 @@
     if ([keyPath isEqualToString:@"progress"]){
         AFDownloadManager *downloadManager = (AFDownloadManager *)object;
         NSProgress *downloadProgress = downloadManager.progress;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.downloadProgressView.progress = downloadProgress.fractionCompleted;
+            NSLog(@"%zd %zd",downloadProgress.completedUnitCount,downloadProgress.totalUnitCount);
+        });
 
-        if (downloadProgress.totalUnitCount == 0) {
-            self.downloadProgressView.progress = 0;
-        } else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.downloadProgressView.progress = (Float64)downloadProgress.completedUnitCount/(Float64)downloadProgress.totalUnitCount;
-            });
-
-        }
     }
     
 }
@@ -89,6 +86,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) dealloc {
+    [self.downloadManager removeObserver:self forKeyPath:@"progress"];
 }
 
 @end

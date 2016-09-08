@@ -11,17 +11,22 @@
 
 @implementation AFDownloadFile
 
-+ (AFDownloadFile *) fileWithURL:(NSString *) URL {
+- (instancetype) initWithURL:(NSString *) URL {
     
-    AFDownloadFile *file = [[AFDownloadFile alloc] init];
-    NSString *name = [URL lastPathComponent];
-    NSString *mainPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *filePath = [mainPath stringByAppendingPathComponent:name];
-    file.directURL = URL;
-    file.name = name;
-    file.path = filePath;
+    if (self) {
+        NSString *name = [URL lastPathComponent];
+        NSString *mainPath = [AFDownloadFile defaultFileFolder];
+        NSString *filePath = [mainPath stringByAppendingPathComponent:name];
+        self.directURL = URL;
+        self.name = name;
+        self.path = filePath;
+    }
     
-    return file;
+    return self;
+}
+
++ (instancetype) fileWithURL:(NSString *) URL {
+    return [[AFDownloadFile alloc] initWithURL:URL];
 }
 
 + (NSArray<AFDownloadFile*> *) filesWithURLs:(NSArray<NSString*> *) URLs {
@@ -33,6 +38,10 @@
     }
     
     return [NSArray arrayWithArray:files];
+}
+
++ (NSString *) defaultFileFolder {
+    return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
 }
 
 @end

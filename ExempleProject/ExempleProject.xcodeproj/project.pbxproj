@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		713ABE391D81A1BB00805D52 /* AFVimeoDownloadFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 713ABE381D81A1BB00805D52 /* AFVimeoDownloadFile.m */; };
 		717FCB3C1D801377009AE7E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB3B1D801377009AE7E8 /* main.m */; };
 		717FCB3F1D801377009AE7E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB3E1D801377009AE7E8 /* AppDelegate.m */; };
 		717FCB421D801377009AE7E8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 717FCB411D801377009AE7E8 /* ViewController.m */; };
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		12190F4D6C5E35653F195358 /* Pods-ExempleProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExempleProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ExempleProject/Pods-ExempleProject.debug.xcconfig"; sourceTree = "<group>"; };
 		5BF173B50A6C172E93E73C96 /* libPods-ExempleProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExempleProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		713ABE371D81A1BB00805D52 /* AFVimeoDownloadFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFVimeoDownloadFile.h; sourceTree = "<group>"; };
+		713ABE381D81A1BB00805D52 /* AFVimeoDownloadFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFVimeoDownloadFile.m; sourceTree = "<group>"; };
 		717FCB371D801377009AE7E8 /* ExempleProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExempleProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		717FCB3B1D801377009AE7E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		717FCB3D1D801377009AE7E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -61,6 +64,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		713ABE361D81A1BB00805D52 /* AFVimeoDownloadFile */ = {
+			isa = PBXGroup;
+			children = (
+				713ABE371D81A1BB00805D52 /* AFVimeoDownloadFile.h */,
+				713ABE381D81A1BB00805D52 /* AFVimeoDownloadFile.m */,
+			);
+			path = AFVimeoDownloadFile;
+			sourceTree = "<group>";
+		};
 		717FCB2E1D801377009AE7E8 = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +120,7 @@
 		717FCB511D8013A4009AE7E8 /* AFDownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				713ABE361D81A1BB00805D52 /* AFVimeoDownloadFile */,
 				717FCB521D8013A4009AE7E8 /* AFDownloadFile */,
 				717FCB561D8013A4009AE7E8 /* AFDownloadManager.h */,
 				717FCB571D8013A4009AE7E8 /* AFDownloadManager.m */,
@@ -282,6 +295,7 @@
 				717FCB621D8013A4009AE7E8 /* AFURLSessionOperation.m in Sources */,
 				717FCB3F1D801377009AE7E8 /* AppDelegate.m in Sources */,
 				717FCB5F1D8013A4009AE7E8 /* AFDownloadFile.m in Sources */,
+				713ABE391D81A1BB00805D52 /* AFVimeoDownloadFile.m in Sources */,
 				717FCB3C1D801377009AE7E8 /* main.m in Sources */,
 				717FCB601D8013A4009AE7E8 /* AFDownloadManager.m in Sources */,
 				717FCB611D8013A4009AE7E8 /* AFHTTPSessionOperation.m in Sources */,

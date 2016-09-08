@@ -10,6 +10,8 @@
 
 @interface AFDownloadManager()
 
+@property(strong, nonatomic, readwrite) NSOperationQueue *operationQueue;
+@property(strong, atomic, readwrite) NSProgress *progress;
 @property(strong, atomic) NSMutableSet *filesInProgress;
 @property(strong, atomic) NSMutableSet *filesSuccess;
 @property(strong, atomic) NSMutableSet *filesFailure;
@@ -33,11 +35,13 @@
         self.filesSuccess = [[NSMutableSet alloc] init];
         self.filesFailure =[[NSMutableSet alloc] init];
 
-        self.operationQueue.maxConcurrentOperationCount = 1;
+        self.operationQueue.maxConcurrentOperationCount = 4;
     }
     
     return self;
 }
+
+#pragma mark Start loading methods
 
 - (void) addDownloadFiles:(NSArray<AFDownloadFile*> *) files {
     @synchronized (self) {
@@ -45,8 +49,8 @@
         [self.filesInProgress addObjectsFromArray:files];
         NSMutableArray *operations = [[NSMutableArray alloc] init];
         for (AFDownloadFile *file in files) {
-            NSArray *fileOperation = [self operationsForFile:file];
-            [operations addObjectsFromArray:fileOperation];
+            AsynchronousOperation *fileOperation = [self operationsForFile:file];
+            [operations addObject:fileOperation];
         }
         [self.operationQueue addOperations:operations waitUntilFinished:NO];
     }
@@ -77,24 +81,18 @@
     return existDuplicate;
 }
 
-- (NSArray *)operationsForFile:(AFDownloadFile *) file {
+- (AFHTTPSessionOperation *)operationsForFile:(AFDownloadFile *) file {
     
     if (!file.directURL) {
-        AFHTTPSessionOperation *directLinkOperation = [self directLinkOperation:file];
-        AFHTTPSessionOperation *headerOperation = [self headerOperation:file];
-        AFURLSessionOperation *downloadOperation = [self downloadOperation:file];
-        [downloadOperation addDependency:headerOperation];
-        [headerOperation addDependency:directLinkOperation];
-        return @[directLinkOperation,headerOperation,downloadOperation];
+        return [self directLinkOperation:file];
     } else{
-        AFHTTPSessionOperation *headerOperation = [self headerOperation:file];
-        AFURLSessionOperation *downloadOperation = [self downloadOperation:file];
-        [downloadOperation addDependency:headerOperation];
-        return @[headerOperation,downloadOperation];
+        return [self headerOperation:file];
     }
  
     return nil;
 }
+
+#pragma mark Operation generation Methods
 
 - (AFHTTPSessionOperation *) directLinkOperation:(AFDownloadFile *) file {
     __weak __typeof__(self) weakSelf = self;
@@ -108,17 +106,20 @@
                                          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                                               __strong typeof(self)strongSelf = weakSelf;
                                              file.directURL = file.directLinkHandler(task,responseObject);
+                                             
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadDirectLinkOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadDirectLinkOfFile:file operation:operation error:nil];
                                              }
+                                             AFHTTPSessionOperation *headerOperation = [strongSelf headerOperation:file];
+                                             [strongSelf.operationQueue addOperation:headerOperation];
                                          } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                                              __strong typeof(self)strongSelf = weakSelf;
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadDirectLinkOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadDirectLinkOfFile:file operation:operation error:error];
                                              }
-                                             [operation cancel];
+                                             [self changeFileStatus:false success:NO];
+                                             [strongSelf finishLoadingFiles];
                                          }];
-    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityHigh;
     return operation;
 }
@@ -143,21 +144,24 @@
                                                      expectedContentLength = (tmpNum) ? tmpNum.integerValue : 0;
                                                  }
                                              }
-                                             
-                                             [strongSelf setProgressTotalUnitCount:strongSelf.progress.totalUnitCount + expectedContentLength];
+                                             int64_t totalUnitCount = strongSelf.progress.totalUnitCount + expectedContentLength;
+                                             [strongSelf setProgressTotalUnitCount:totalUnitCount];
                                              file.size = expectedContentLength;
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadHeaderOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadHeaderOfFile:file operation:operation error:nil];
                                              }
+                                             AFURLSessionOperation *downloadOperation = [strongSelf downloadOperation:file];
+                                             [strongSelf.operationQueue addOperation:downloadOperation];
                                          } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                                              __strong typeof(self)strongSelf = weakSelf;
-                                             [strongSelf setProgressTotalUnitCount:strongSelf.progress.totalUnitCount - expectedContentLength];
+                                             int64_t totalUnitCount = strongSelf.progress.totalUnitCount - expectedContentLength;
+                                             [strongSelf setProgressTotalUnitCount:totalUnitCount];
                                              if ([strongSelf.delegate respondsToSelector:@selector(completeLoadHeaderOfFile:operation:error:)]){
                                                  [strongSelf.delegate completeLoadHeaderOfFile:file operation:operation error:error];
                                              }
-                                            [operation cancel];
+                                             [self changeFileStatus:false success:NO];
+                                             [strongSelf finishLoadingFiles];
                                          }];
-    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityNormal;
     return operation;
 }
@@ -187,17 +191,16 @@
                                                    [strongSelf createDirectory:filePath error:nil];
                                                    return filePath;
                                                } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                                                        __strong typeof(self)strongSelf = weakSelf;
-                                                        [strongSelf completeLoadFile:file operation:operation prevUnionCount:previousCompletedUnitCount error:error];
-                                                        [strongSelf finishLoadingFiles];
-                                                        [operation cancel];
+                                                    __strong typeof(self)strongSelf = weakSelf;
+                                                    [strongSelf completeLoadFile:file operation:operation prevUnionCount:previousCompletedUnitCount error:error];
+                                                    [strongSelf finishLoadingFiles];
                                                }];
-
-    operation.cancelDependentOperations = YES;
     operation.queuePriority = NSOperationQueuePriorityLow;
     
     return operation;
 }
+
+#pragma mark Completion Loading methods
 
 - (void) completeLoadFile:(AFDownloadFile *) file operation:(AFURLSessionOperation *) operation prevUnionCount:(int64_t) previousCompletedUnitCount error:(NSError *)error {
     
@@ -207,8 +210,11 @@
        [self changeFileStatus:file success:YES];
     }else {
         if(!error) error = checkError;
-        [self setProgressCompletedUnitCount:(self.progress.completedUnitCount - operation.task.response.expectedContentLength)];
-        [self setProgressTotalUnitCount:self.progress.totalUnitCount - previousCompletedUnitCount];
+
+        int64_t completedUnitCount = MAX(self.progress.completedUnitCount - operation.task.response.expectedContentLength, 0);
+        int64_t expectedContentLength = MAX(self.progress.totalUnitCount - previousCompletedUnitCount, 0);
+        [self setProgressCompletedUnitCount:completedUnitCount totalUnitCount:expectedContentLength];
+        
         [self changeFileStatus:file success:NO];
     }
 
@@ -224,11 +230,14 @@
             NSArray *failureFiles = [self.filesFailure.allObjects copy];
             [self.delegate completeLoadFiles:successFiles failureFiles:failureFiles];
         }
+        self.operationQueue = [[NSOperationQueue alloc] init];
         [self.filesSuccess removeAllObjects];
         [self.filesFailure removeAllObjects];
     }
 
 }
+
+#pragma mark Helper methods
 
 - (NSError *)checkResponseForErrors:(NSURLResponse *) response{
     
@@ -266,10 +275,14 @@
                                                            error:error];
 }
 
+#pragma mark KVO progress
+
 - (void) setProgressTotalUnitCount:(int64_t) totalUnitCount {
     if (self.progress.totalUnitCount != totalUnitCount){
         [self willChangeValueForKey:@"progress"];
-        self.progress.totalUnitCount = totalUnitCount;
+        @synchronized (self) {
+            self.progress.totalUnitCount = totalUnitCount;
+        }
         [self didChangeValueForKey:@"progress"];
     }
 }
@@ -277,13 +290,32 @@
 - (void) setProgressCompletedUnitCount:(int64_t) completedUnitCount {
     if (self.progress.completedUnitCount != completedUnitCount) {
         [self willChangeValueForKey:@"progress"];
-        self.progress.completedUnitCount = completedUnitCount;
+        @synchronized (self) {
+            self.progress.completedUnitCount = completedUnitCount;
+        }
         [self didChangeValueForKey:@"progress"];
     }
 }
 
+- (void) setProgressCompletedUnitCount:(int64_t) completedUnitCount
+                        totalUnitCount:(int64_t) totalUnitCount {
+    if (self.progress.completedUnitCount != completedUnitCount
+        || self.progress.totalUnitCount != totalUnitCount) {
+        
+        [self willChangeValueForKey:@"progress"];
+        @synchronized (self) {
+            self.progress.completedUnitCount = completedUnitCount;
+            self.progress.totalUnitCount = totalUnitCount;
+        }
+        [self didChangeValueForKey:@"progress"];
+    }
+}
+
+#pragma  mark Cancel methods
+
 - (void) cancelDownloadFiles {
     [self.operationQueue cancelAllOperations];
+    [self setProgressCompletedUnitCount:0 totalUnitCount:0];
 }
 
 @end

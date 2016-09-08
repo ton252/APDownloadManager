@@ -37,17 +37,36 @@
                                     <action selector="cancelDownloads:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nhT-kg-2pf"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qnr-2c-jJV">
+                                <rect key="frame" x="239" y="259" width="116" height="30"/>
+                                <state key="normal" title="Load Vimeo Files"/>
+                                <connections>
+                                    <action selector="loadVimeoFiles:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uVf-aB-0NZ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9LH-sk-dVJ">
+                                <rect key="frame" x="20" y="259" width="126" height="30"/>
+                                <state key="normal" title="Load files from list"/>
+                                <connections>
+                                    <action selector="loadFilesFromList:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hn9-Yh-Y1h"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="H7c-54-knG" secondAttribute="trailing" constant="20" id="7DY-OG-Bmd"/>
+                            <constraint firstItem="qnr-2c-jJV" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="9LH-sk-dVJ" secondAttribute="trailing" constant="8" id="8aF-q8-D1J"/>
                             <constraint firstItem="H7c-54-knG" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="8vD-aI-dpv"/>
                             <constraint firstItem="H7c-54-knG" firstAttribute="leading" secondItem="W9c-WH-dhu" secondAttribute="trailing" constant="-153" id="Ck8-Io-uC1"/>
                             <constraint firstItem="WRh-ma-LgH" firstAttribute="top" secondItem="H7c-54-knG" secondAttribute="bottom" constant="8" id="Ets-hh-B9C"/>
+                            <constraint firstItem="qnr-2c-jJV" firstAttribute="centerY" secondItem="9LH-sk-dVJ" secondAttribute="centerY" id="HsN-XW-zUm"/>
+                            <constraint firstItem="W9c-WH-dhu" firstAttribute="top" secondItem="9LH-sk-dVJ" secondAttribute="bottom" constant="15" id="M2J-mR-zJR"/>
                             <constraint firstItem="H7c-54-knG" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MFA-Ad-0xY"/>
                             <constraint firstItem="H7c-54-knG" firstAttribute="top" secondItem="W9c-WH-dhu" secondAttribute="bottom" constant="8" id="Vmc-tT-ftJ"/>
+                            <constraint firstItem="9LH-sk-dVJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="bXV-8b-JT5"/>
                             <constraint firstItem="H7c-54-knG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="fY6-us-mZz"/>
                             <constraint firstItem="WRh-ma-LgH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mq4-v5-k3x"/>
+                            <constraint firstAttribute="trailing" secondItem="qnr-2c-jJV" secondAttribute="trailing" constant="20" id="r8u-cv-rsV"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>

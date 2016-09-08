@@ -18,8 +18,8 @@
 @interface AFDownloadManager : NSObject
 
 @property(strong, nonatomic) AFHTTPSessionManager *sessionManager;
-@property(strong, nonatomic) NSOperationQueue *operationQueue;
-@property(strong, nonatomic) NSProgress *progress;
+@property(strong, nonatomic, readonly) NSOperationQueue *operationQueue;
+@property(strong, atomic, readonly) NSProgress *progress;
 @property(weak, nonatomic) id<AFDownloadManagerDelegate> delegate;
 
 - (void) addDownloadFiles:(NSArray<AFDownloadFile*> *) files;
